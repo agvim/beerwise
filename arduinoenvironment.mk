@@ -1,13 +1,9 @@
-# where the arduino is connected (for flashing)
-PORT=/dev/ttyUSB0
-
-# where to find the cores code and variant code
-ARDUINODIR = $(HOME)/arduino-1.8.3
-AVRTOOLSDIR = $(ARDUINODIR)/hardware/tools/avr
+# core and variant dirs for libraries (using arduino nano)
 ARDUINOCOREDIR = $(ARDUINODIR)/hardware/arduino/avr/cores/arduino
 VARIANTDIR = $(ARDUINODIR)/hardware/arduino/avr/variants/eightanaloginputs
 
-# where to find the avr tools
+# where to find the avr tools (using the ones from arduino)
+AVRTOOLSDIR = $(ARDUINODIR)/hardware/tools/avr
 AVR-GCC = $(AVRTOOLSDIR)/bin/avr-gcc
 AVR-G++ = $(AVRTOOLSDIR)/bin/avr-g++
 AVR-GCC-AR = $(AVRTOOLSDIR)/bin/avr-gcc-ar

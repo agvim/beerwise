@@ -31,19 +31,22 @@ SOURCES = \
 
 OBJECTS = $(patsubst $(ARDUINOCOREDIR)/%, $(OUTDIR)/%.o, $(SOURCES))
 
+# force build directory being there
+$(shell mkdir -p $(OUTDIR))
+
 # pack all core objects together so they can be easily linked from the base
 # makefile without knowing the exact names
 $(OUTDIR)/core.a: $(OBJECTS)
 	$(AVR-GCC-AR) rcs  "$@" $(OBJECTS)
 
 $(OUTDIR)/%.S.o: $(ARDUINOCOREDIR)/%.S
-	$(AVR-GCC) -c -g -x assembler-with-cpp -flto -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10803 -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
+	$(AVR-GCC) -c -g -x assembler-with-cpp -flto -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=$(ARDUINOVERSION) -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
 
 $(OUTDIR)/%.cpp.o: $(ARDUINOCOREDIR)/%.cpp
-	$(AVR-G++) -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10803 -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
+	$(AVR-G++) -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=$(ARDUINOVERSION) -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
 
 $(OUTDIR)/%.c.o: $(ARDUINOCOREDIR)/%.c
-	$(AVR-GCC) -c -g -Os -w -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10803 -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
+	$(AVR-GCC) -c -g -Os -w -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=$(ARDUINOVERSION) -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR   "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "$<" -o "$@"
 
 .PHONY: clean
 clean:

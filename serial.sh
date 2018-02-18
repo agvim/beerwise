@@ -1,2 +1,2 @@
 #!/bin/bash
-miniterm.py /dev/ttyUSB0 57600
+miniterm.py $ARDUINOPORT 57600

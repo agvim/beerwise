@@ -28,7 +28,7 @@ sketch: $(OBJECTS)
 
 $(OUTDIR)/%.cpp.o: $(SRCDIR)/%.cpp
 	mkdir -p $(dir $@)
-	$(AVR-G++) -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10803 -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "-I$(SRCDIR)" $(G++INCLUDES) "$<" -o "$@"
+	$(AVR-G++) -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=$(ARDUINOVERSION) -DARDUINO_AVR_NANO -DARDUINO_ARCH_AVR "-I$(ARDUINOCOREDIR)" "-I$(VARIANTDIR)" "-I$(SRCDIR)" $(G++INCLUDES) "$<" -o "$@"
 
 # compiling core
 .PHONY: core
