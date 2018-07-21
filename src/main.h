@@ -5,13 +5,18 @@
 
 volatile uint8_t buttons;
 
-unsigned long lasttime;
+unsigned long currtime;
+
+// freezer control
+unsigned long lastfreezerstopped = 0, lastfreezerstarted = 0, lastserialupdate = 0;
+bool cooling = false;
 
 // ledkey display
 LedKey ledKey(data, clock, strobe);
 
 // temperature sensor
-DS18x20 tempSensor1(sensorpin);
+DS18x20 tempSensorBeer(beersensorpin);
+DS18x20 tempSensorChamber(chambersensorpin);
 
 void setup(void);
 void loop(void);

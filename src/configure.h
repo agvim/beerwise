@@ -13,15 +13,24 @@
 #define VERSION      "\nBEERWISE TEMP CONTROL 0.0.1"
 #define SERIAL_BPS   57600
 
+// fridge will be working or resting for at least this time
+#define FRIDGE_INTERVAL 7 * 60 * 1000
+
+#define REPORT_INTERVAL 1 * 60 * 1000
+
+#define TARGET_TEMPERATURE 21.0
+
 // Ledkey
 const int strobe = 2;
 const int clock = 4;
 const int data = 3;
 const byte displayintensity = 3;
 
-const int cooler = 6;
-const int heater = 7;
-const int sensorpin = 5;
+const int cooler = 7;
+// const int heater = 8;
+// TODO XXX FIXME
+const int beersensorpin = 5;
+const int chambersensorpin = 6;
 /*
 //RTC
 // const int  cs=8; //chip select
@@ -32,14 +41,4 @@ const int sensorpin = 5;
 // // DHT environment sensor
 // #define DHTPIN 7
 // #define DHTTYPE DHT11
-
-// modes
-#define MODE_DISPLAY 0x0
-#define MODE_SET 0x1
-
-// buttons
-#define BUTTON_OK     0
-#define BUTTON_CANCEL 1
-#define BUTTON_PLUS   2
-#define BUTTON_MINUS  3
 */

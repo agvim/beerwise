@@ -57,3 +57,8 @@ LedKey::setDisplay(float number){
     this->tm1638.setDisplayToDecNumber(inumber, dots, false);
 }
 
+LedKey::setDisplay(float number1, float number2){
+    const byte dots=0b01000100;
+    unsigned long inumber = number1 * 1000000 + number2 * 100;
+    this->tm1638.setDisplayToDecNumber(inumber, dots, false);
+}
