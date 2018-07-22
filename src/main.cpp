@@ -27,12 +27,12 @@ void setup()
  * we log when we act on any temperature change and periodically
  */
 void report(float celsius_beer, float celsius_chamber, bool cooling){
-    Serial.print("beer :'");
+    Serial.print("beer: '");
     Serial.print(celsius_beer, 2);
     Serial.print("', chamber: '");
     Serial.print(celsius_chamber, 2);
     Serial.print("', cooling:'");
-    Serial.println(cooling ? "true'": "false'");
+    Serial.println(cooling ? "1'": "0'");
 }
 
 // main
