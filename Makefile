@@ -45,7 +45,7 @@ $(LIBDIR)/$(OUTDIR)/libs.a:
 # flash the sketch into a real arduino
 .PHONY: flash
 flash: $(HEX)
-	$(AVRDUDE) -C$(AVRTOOLSDIR)/etc/avrdude.conf -v -patmega328p -carduino -P$(PORT) -b57600 -D -Uflash:w:$(HEX):i
+	$(AVRDUDE) -C$(AVRTOOLSDIR)/etc/avrdude.conf -v -patmega328p -carduino -P$(ARDUINOPORT) -b57600 -D -Uflash:w:$(HEX):i
 
 # clean up sketch and completed linked objects
 .PHONY: clean

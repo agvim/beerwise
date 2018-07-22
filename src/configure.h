@@ -14,9 +14,11 @@
 #define SERIAL_BPS   57600
 
 // fridge will be working or resting for at least this time
-#define FRIDGE_INTERVAL 7 * 60 * 1000
+//#define FRIDGE_INTERVAL 7 * 60 * 1000
+#define FRIDGE_INTERVAL 420000
 
-#define REPORT_INTERVAL 1 * 60 * 1000
+//#define REPORT_INTERVAL 1 * 60 * 1000
+#define REPORT_INTERVAL 60000
 
 #define TARGET_TEMPERATURE 21.0
 
@@ -27,8 +29,12 @@ const int data = 3;
 const byte displayintensity = 3;
 
 const int cooler = 7;
-// const int heater = 8;
-// TODO XXX FIXME
+const int heater = 8;
+const int fan = 9;
+
+// fan 0-255
+unsigned int fanpower = 85;
+
 const int beersensorpin = 5;
 const int chambersensorpin = 6;
 /*
