@@ -10,7 +10,7 @@ void setup()
     analogWrite(fan, fanpower);
 
     // set serial port
-    Serial.begin(SERIAL_BPS);
+    // Serial.begin(SERIAL_BPS);
     // Serial.println(VERSION);
 
     // Serial.println(FRIDGE_INTERVAL);
@@ -27,20 +27,26 @@ void setup()
     ledKey.welcome();
 
     currtime = millis();
+
+    //digitalWrite(cooler, HIGH);
+    //digitalWrite(heater, HIGH);
 }
 
 /*
  * the application at the other end of the serial should log time.
  * we log when we act on any temperature change and periodically
  */
+/*
 void report(float celsius_beer, float celsius_chamber, bool cooling){
-    Serial.print("beer: '");
-    Serial.print(celsius_beer, 2);
-    Serial.print("', chamber: '");
-    Serial.print(celsius_chamber, 2);
-    Serial.print("', cooling: '");
-    Serial.println(cooling ? "1'": "0'");
+    //beer: '27.81', chamber: '27.75', cooling: '1'
+    if(Serial.availableForWrite() > 7) Serial.print("beer: '");
+    if(Serial.availableForWrite() > 5) Serial.print(celsius_beer, 2);
+    if(Serial.availableForWrite() > 13) Serial.print("', chamber: '");
+    if(Serial.availableForWrite() > 5) Serial.print(celsius_chamber, 2);
+    if(Serial.availableForWrite() > 13) Serial.print("', cooling: '");
+    if(Serial.availableForWrite() > 5) Serial.println(cooling ? "1'": "0'");
 }
+*/
 
 // main
 void loop(){
@@ -50,15 +56,27 @@ void loop(){
     buttons = ledKey.getButtons();
     ledKey.setLEDs(buttons);
 
+    /*
+    if(buttons & 0b1000){
+        digitalWrite(cooler, HIGH);
+    }
+    else{
+        digitalWrite(cooler, LOW);
+        if(buttons & 0b0100){
+            digitalWrite(heater, HIGH);
+        }
+        else{
+            digitalWrite(heater, LOW);
+        }
+    }
+    */
+
     // GET STATUS AND PRINT IT
     celsius_beer = tempSensorBeer.async_measure();
     celsius_chamber = tempSensorChamber.async_measure();
     ledKey.setDisplay(celsius_beer, celsius_chamber);
 
     currtime = millis();
-
-    //digitalWrite(cooler, HIGH);
-    //digitalWrite(heater, HIGH);
 
     // Simple version, only start and stoop cooler depending on beer + chamber temperature and respecting fridge compressor rest intervals
     // TODO XXX FIXME: playing with thresholds here, the logic is also not optimal
@@ -68,9 +86,9 @@ void loop(){
         // should cool, check last time we started the fridge
         if(!cooling){
             if((unsigned long)(currtime - lastfreezerstopped) > (unsigned long)FRIDGE_INTERVAL){
-                cooling = true;
-                report(celsius_beer, celsius_chamber, cooling);
                 digitalWrite(cooler, HIGH);
+                cooling = true;
+                //report(celsius_beer, celsius_chamber, cooling);
                 lastfreezerstarted = currtime;
             }
         }
@@ -79,21 +97,23 @@ void loop(){
             ){
         if(cooling){
             if((unsigned long)(currtime - lastfreezerstarted) > (unsigned long)FRIDGE_INTERVAL){
-                cooling = false;
-                report(celsius_beer, celsius_chamber, cooling);
                 digitalWrite(cooler, LOW);
+                cooling = false;
+                //report(celsius_beer, celsius_chamber, cooling);
                 lastfreezerstopped = currtime;
             }
         }
     }
 
+    /*
     if((unsigned long)(currtime - lastserialupdate) > (unsigned long)REPORT_INTERVAL){
-        report(celsius_beer, celsius_chamber, cooling);
+        //report(celsius_beer, celsius_chamber, cooling);
         lastserialupdate = currtime;
+    }
+    */
+}
         /*
         fanpower += 85;
         if (fanpower > 255) fanpower = 0;
         analogWrite(fan, fanpower);
         */
-    }
-}
