@@ -57,6 +57,7 @@ int DS18x20::init(){
     // delay(1000);     // maybe 750ms is enough, maybe not
     // keep track of how long ago we made a measurement
     this->lasttime = millis();
+    this->error = false;
 }
 
 float DS18x20::async_measure(){
@@ -96,7 +97,8 @@ float DS18x20::async_measure(){
         Serial.println();
         */
         if (OneWire::crc8(data, 8) != data[8]) {
-            Serial.println("CRC is not valid!");
+            //Serial.println("CRC is not valid!");
+            this->error = true;
             return 0;
         }
 
@@ -123,13 +125,16 @@ float DS18x20::async_measure(){
             else if (cfg == 0x40) raw = raw & ~1; // 11 bit res, 375 ms
             //// default is 12 bit resolution, 750 ms conversion time
         }
+        // convert to celcius
+        this->lastmeasurement = (float)raw / 16.0;
+
+
         // start conversion again
         this->start_conversion();
         // delay(1000);     // maybe 750ms is enough, maybe not
         this->lasttime = millis();
 
-        // convert to celcius and return the value
-        this->lastmeasurement = (float)raw / 16.0;
+        // return the value
         return this->lastmeasurement;
     }
 }

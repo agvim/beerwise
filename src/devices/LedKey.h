@@ -13,6 +13,7 @@ class LedKey {
         setLEDs(uint8_t leds);
         setDisplay(float number);
         setDisplay(float number1, float number2);
+        setDisplay(char text[]);
     private:
         TM1638 tm1638;
         uint8_t buttons;

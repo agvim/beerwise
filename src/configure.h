@@ -14,13 +14,13 @@
 #define SERIAL_BPS   57600
 
 // fridge will be working or resting for at least this time
-//#define FRIDGE_INTERVAL 7 * 60 * 1000
-#define FRIDGE_INTERVAL 420000
+//#define FRIDGE_INTERVAL (3 * 60 * 1000)
+#define FRIDGE_INTERVAL 180000
 
-//#define REPORT_INTERVAL 1 * 60 * 1000
-#define REPORT_INTERVAL 60000
+#define REPORT_INTERVAL (1 * 60 * 1000)
 
 #define TARGET_TEMPERATURE 21.0
+//#define TARGET_TEMPERATURE 14.0
 
 // Ledkey
 const int strobe = 2;

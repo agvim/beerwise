@@ -17,16 +17,16 @@ void setup()
     // Serial.println(REPORT_INTERVAL);
     // Serial.println(TARGET_TEMPERATURE);
 
-    // init the temperature sensor. TODO XXX FIXME: ASSUMING THEY WORK
-    tempSensorBeer.init();
-    tempSensorChamber.init();
-
     // init LEDKEY display
     ledKey.init(displayintensity);
 
     ledKey.welcome();
 
     currtime = millis();
+
+    // init the temperature sensor.
+    while(tempSensorBeer.init() != -1){};
+    while(tempSensorChamber.init() != -1){};
 
     //digitalWrite(cooler, HIGH);
     //digitalWrite(heater, HIGH);
@@ -71,46 +71,62 @@ void loop(){
     }
     */
 
-    // GET STATUS AND PRINT IT
-    celsius_beer = tempSensorBeer.async_measure();
-    celsius_chamber = tempSensorChamber.async_measure();
-    ledKey.setDisplay(celsius_beer, celsius_chamber);
-
     currtime = millis();
 
-    // Simple version, only start and stoop cooler depending on beer + chamber temperature and respecting fridge compressor rest intervals
-    // TODO XXX FIXME: playing with thresholds here, the logic is also not optimal
-    if((celsius_beer > (TARGET_TEMPERATURE + 1.0)) ||
-       ((celsius_beer > (TARGET_TEMPERATURE + 0.5)) && (celsius_chamber > (TARGET_TEMPERATURE - 0.5)))
-       ){
-        // should cool, check last time we started the fridge
-        if(!cooling){
-            if((unsigned long)(currtime - lastfreezerstopped) > (unsigned long)FRIDGE_INTERVAL){
-                digitalWrite(cooler, HIGH);
-                cooling = true;
-                //report(celsius_beer, celsius_chamber, cooling);
-                lastfreezerstarted = currtime;
-            }
-        }
-    } else if((celsius_beer < (TARGET_TEMPERATURE - 1.0)) ||
-              ((celsius_beer < (TARGET_TEMPERATURE - 0.5)) && (celsius_chamber < (TARGET_TEMPERATURE + 0.5)))
-            ){
-        if(cooling){
-            if((unsigned long)(currtime - lastfreezerstarted) > (unsigned long)FRIDGE_INTERVAL){
-                digitalWrite(cooler, LOW);
-                cooling = false;
-                //report(celsius_beer, celsius_chamber, cooling);
-                lastfreezerstopped = currtime;
-            }
-        }
+    if (tempSensorChamber.error || tempSensorBeer.error){
+        digitalWrite(cooler, LOW);
+        cooling = false;
+        digitalWrite(heater, LOW);
+        heating = false;
+        ledKey.setDisplay("ERROR SE");
+        //if(tempSensorChamber.error){
+            tempSensorChamber.init();
+        //}
+        //if(tempSensorBeer.error){
+            tempSensorBeer.init();
+        //}
     }
+    else{
+        // GET STATUS
+        celsius_beer = tempSensorBeer.async_measure();
+        celsius_chamber = tempSensorChamber.async_measure();
+        // PRINT TEMPERATURES
+        ledKey.setDisplay(celsius_beer, celsius_chamber);
 
-    /*
-    if((unsigned long)(currtime - lastserialupdate) > (unsigned long)REPORT_INTERVAL){
-        //report(celsius_beer, celsius_chamber, cooling);
-        lastserialupdate = currtime;
+        // Simple version, only start and stoop cooler depending on beer + chamber temperature and respecting fridge compressor rest intervals
+        // TODO XXX FIXME: playing with thresholds here, the logic is also not optimal
+        if((celsius_beer > (TARGET_TEMPERATURE + 1.0)) ||
+           ((celsius_beer > (TARGET_TEMPERATURE + 0.5)) && (celsius_chamber > (TARGET_TEMPERATURE - 0.5)))
+           ){
+            // should cool, check last time we started the fridge
+            if(!cooling){
+                if((unsigned long)(currtime - lastfreezerstopped) > (unsigned long)FRIDGE_INTERVAL){
+                    digitalWrite(cooler, HIGH);
+                    cooling = true;
+                    //report(celsius_beer, celsius_chamber, cooling);
+                    lastfreezerstarted = currtime;
+                }
+            }
+        } else if((celsius_beer < (TARGET_TEMPERATURE - 1.0)) ||
+                  ((celsius_beer < (TARGET_TEMPERATURE - 0.5)) && (celsius_chamber < (TARGET_TEMPERATURE + 0.5)))
+                ){
+            if(cooling){
+                if((unsigned long)(currtime - lastfreezerstarted) > (unsigned long)FRIDGE_INTERVAL){
+                    digitalWrite(cooler, LOW);
+                    cooling = false;
+                    //report(celsius_beer, celsius_chamber, cooling);
+                    lastfreezerstopped = currtime;
+                }
+            }
+        }
+
+        /*
+        if((unsigned long)(currtime - lastserialupdate) > (unsigned long)REPORT_INTERVAL){
+            //report(celsius_beer, celsius_chamber, cooling);
+            lastserialupdate = currtime;
+        }
+        */
     }
-    */
 }
         /*
         fanpower += 85;

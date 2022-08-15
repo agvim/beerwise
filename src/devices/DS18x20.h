@@ -9,6 +9,7 @@ class DS18x20 {
         DS18x20(uint8_t pin);
         float async_measure();
         int init();
+        bool error = false;
     private:
         OneWire ow;
         byte addr[8]; // device address

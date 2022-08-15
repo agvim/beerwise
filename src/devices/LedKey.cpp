@@ -65,3 +65,7 @@ LedKey::setDisplay(float number1, float number2){
     inumber += n2;
     this->tm1638.setDisplayToDecNumber(inumber, dots, false);
 }
+
+LedKey::setDisplay(char text[]){
+    this->tm1638.setDisplayToString(text);
+}

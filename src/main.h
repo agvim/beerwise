@@ -10,6 +10,7 @@ unsigned long currtime;
 // freezer control
 unsigned long lastfreezerstopped = 0, lastfreezerstarted = 0, lastserialupdate = 0;
 bool cooling = false;
+bool heating = false;
 
 // ledkey display
 LedKey ledKey(data, clock, strobe);
